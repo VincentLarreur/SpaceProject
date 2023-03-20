@@ -1,114 +1,74 @@
 import { useRef, useEffect, useMemo, useState } from 'react'
 import { MathUtils, Vector3, Quaternion, Matrix4, Raycaster } from 'three'
-import { useControls as useLevaControls } from 'leva'
-import { useFrame, useThree } from '@react-three/fiber'
-import { useGLTF, useAnimations, useKeyboardControls, KeyboardControls } from '@react-three/drei'
-import { CuboidCollider, RigidBody, useRapier } from '@react-three/rapier'
-import Characters from "../../utils/characters.js"
+import { useFrame } from '@react-three/fiber'
+import { useKeyboardControls } from '@react-three/drei'
+import { useRapier } from '@react-three/rapier'
 
-
-export default function Player({character = Characters.FLAMINGO.mech})
+export default function characterController({
+    characterRigidBody,
+    characterColliderRef,
+    actions,
+    transparentWalls,
+    applyImpulsesToDynamicBodies = true,
+    snapToGroundDistance = 0.1,
+    characterShapeOffset = 0.1,
+    autoStepMaxHeight = 1,
+    autoStepMinWidth = 0.5,
+    autoStepIncludeDynamicBodies = true,
+    accelerationTimeAirborne = 0.2,
+    accelerationTimeGrounded = 0.025,
+    speedWalk = 2,
+    speedRun = 4,
+    timeToJumpApex = 1.25,
+    maxJumpHeight = 8,
+    minJumpHeight = 1,
+    velocityXZSmoothing = 0.2,
+    velocityXZMin = 0.0001,
+    lockCameraIsometric = true,
+    isometricCameraPosition = 20,
+    jumpAnimationName = "Jump_Idle",
+    raycastTransparentWallSize = 34
+})
 {
-    const { scene } = useThree()
-    let worldObject = []
-    scene.traverse((obj) => {
-        if (obj.name === 'worldObject') {
-            worldObject.push(obj)
-        }
-    })
+    const rapier = useRapier()
 
     let directionVector = new Vector3();
     let positionVector = new Vector3();
-
-    const group = useRef()
-    const characterRigidBody = useRef()
-    const characterColliderRef = useRef()
-
-    const { nodes, materials, animations } = useGLTF(character)
-    const { actions } = useAnimations(animations, group)
-
-    let currentAnimation = "Idle"
-
     const direction = new Vector3()
     const frontVector = new Vector3()
     const sideVector = new Vector3()
     const characterLinvel = new Vector3()
     const characterTranslation = new Vector3()
 
-    const rapier = useRapier()
-
-    const camera = useThree((state) => state.camera)
     const [ smoothedCameraPosition ] = useState(() => new Vector3())
     const [ smoothedCameraTarget ] = useState(() => new Vector3())
 
-    const characterController = useRef()
-
     const [, getKeyboardControls] = useKeyboardControls()
 
-    let transparentWalls = []
-
-    const {
-        applyImpulsesToDynamicBodies,
-        snapToGroundDistance,
-        characterShapeOffset,
-        autoStepMaxHeight,
-        autoStepMinWidth,
-        autoStepIncludeDynamicBodies,
-        accelerationTimeAirborne,
-        accelerationTimeGrounded,
-        speedWalk,
-        speedRun,
-        timeToJumpApex,
-        maxJumpHeight,
-        minJumpHeight,
-        velocityXZSmoothing,
-        velocityXZMin,
-        isometricCameraPosition,
-        lockCameraIsometric
-    } = useLevaControls('player-controller', {
-        applyImpulsesToDynamicBodies: true,
-        snapToGroundDistance: 0.1,
-        characterShapeOffset: 0.1,
-        autoStepMaxHeight: 1,
-        autoStepMinWidth: 0.5,
-        autoStepIncludeDynamicBodies: true,
-        accelerationTimeAirborne: 0.2,
-        accelerationTimeGrounded: 0.025,
-        speedWalk: 2,
-        speedRun: 4,
-        timeToJumpApex: 1.25,
-        maxJumpHeight: 8,
-        minJumpHeight: 1,
-        velocityXZSmoothing: 0.2,
-        velocityXZMin: 0.0001,
-        isometricCameraPosition: 20,
-        lockCameraIsometric: true
-    })
+    let temporaryTransparentWalls = []
+    let currentAnimation = "Idle"
 
     const jumpGravity = useMemo(
         () => -(2 * maxJumpHeight) / Math.pow(timeToJumpApex, 2),
         [maxJumpHeight, timeToJumpApex]
     )
-
     const maxJumpVelocity = useMemo(
         () => Math.abs(jumpGravity) * timeToJumpApex,
         [jumpGravity, timeToJumpApex]
     )
-
     const minJumpVelocity = useMemo(
         () => Math.sqrt(2 * Math.abs(jumpGravity) * minJumpHeight),
         [jumpGravity, minJumpHeight]
     )
-
     const horizontalVelocity = useRef({ x: 0, z: 0 })
     const jumpVelocity = useRef(0)
     const holdingJump = useRef(false)
     const jumpTime = useRef(0)
     const jumping = useRef(false)
+    const characterController = useRef()
 
-    useEffect(() =>
+    useEffect((state) =>
     {
-        actions.Idle.play()
         const world = rapier.world.raw()
 
         characterController.current =
@@ -122,6 +82,10 @@ export default function Player({character = Characters.FLAMINGO.mech})
         characterController.current.setApplyImpulsesToDynamicBodies(
             applyImpulsesToDynamicBodies
         )
+
+        if (actions) {
+            actions.Idle.play()
+        }
 
         return () => {
             characterController.current.free()
@@ -186,15 +150,6 @@ export default function Player({character = Characters.FLAMINGO.mech})
             ),
         }
 
-        let newAnimation = "Idle"
-        if (Math.abs(horizontalVelocity.current.x) > 0.01 || Math.abs(horizontalVelocity.current.z) > 0.01)
-        {
-            newAnimation = "Walk"
-        } 
-        if (sprint) {
-            newAnimation = "Run"
-        }
-
         // jumping and gravity
         if (jump && grounded) {
             jumping.current = true
@@ -221,15 +176,23 @@ export default function Player({character = Characters.FLAMINGO.mech})
 
         holdingJump.current = jump
 
-        if (jumping.current) {
-            newAnimation = "Jump_NoHeight"
-        }
-
-        if (newAnimation !== currentAnimation) {
-
-            actions[currentAnimation].fadeOut(0.2)
-            actions[newAnimation].reset().fadeIn(0.2).play()
-            currentAnimation = newAnimation
+        if (actions) {
+            let newAnimation = "Idle"
+            if (Math.abs(horizontalVelocity.current.x) > 0.01 || Math.abs(horizontalVelocity.current.z) > 0.01)
+            {
+                newAnimation = "Walk"
+                if (sprint) {
+                    newAnimation = "Run"
+                }
+            }
+            if (jumping.current) {
+                newAnimation = jumpAnimationName
+            }
+            if (newAnimation !== currentAnimation) {
+                actions[currentAnimation].fadeOut(0.2)
+                actions[newAnimation].reset().fadeIn(0.2).play()
+                currentAnimation = newAnimation
+            }
         }
 
         // compute movement direction
@@ -251,6 +214,7 @@ export default function Player({character = Characters.FLAMINGO.mech})
             movementDirection
         )
 
+        // Movement
         const translation = characterRigidBody.current.translation()
         const newPosition = characterTranslation.copy(translation)
         const movement = characterController.current.computedMovement()
@@ -260,70 +224,67 @@ export default function Player({character = Characters.FLAMINGO.mech})
         characterRigidBody.current.setNextKinematicTranslation(newPosition)
         characterRigidBody.current.setNextKinematicRotation(newPosition)
 
-        if (lockCameraIsometric) {
-            const cameraPosition = new Vector3(translation.x - isometricCameraPosition, translation.y + isometricCameraPosition, translation.z + isometricCameraPosition)
-            smoothedCameraPosition.lerp(cameraPosition, 0.1)
-            smoothedCameraTarget.lerp(newPosition, 0.1)
-            camera.position.copy(smoothedCameraPosition)
-            camera.lookAt(smoothedCameraTarget)
-        }
-
-        for (let wall of transparentWalls) {
-            wall.material.opacity = 1
-        }
-
-        // Transparent walls
-        if (worldObject && worldObject.length > 0) {
-            let dir = camera.getWorldDirection( directionVector );
-		    let pos = camera.getWorldPosition( positionVector);	
-            let raycaster = new Raycaster( pos, dir.normalize(), 0, 34 );	
-		    let intersects = []
-            intersects = raycaster.intersectObjects( worldObject );
-            for (let instersectObject of intersects) {
-                instersectObject.object.material.transparent = true
-                instersectObject.object.material.opacity = 0.25;
-                transparentWalls.push(instersectObject.object)
-            }
-        }
-
         // Rotation
         if ( (Math.abs(movement.x) > 0.01 || Math.abs(movement.z) > 0.01)) {
-            let matrixLooking = new Matrix4().lookAt(translation, newPosition,new Vector3(0,0,0));
+            let matrixLooking = new Matrix4().lookAt(translation, newPosition, new Vector3(0, 1, 0));
             let rotationQuaternion = new Quaternion().setFromRotationMatrix(matrixLooking);
             rotationQuaternion.x = rotationQuaternion.z = 0
             characterRigidBody.current.setNextKinematicRotation(rotationQuaternion)
         }
-    })
 
-    return <RigidBody 
-        ref={ characterRigidBody } 
-        colliders={ false }
-        scale={1}
-        position={[0, 20, 0]}
-        type="kinematicPosition"
-        enabledRotations={[false, true, false]}
-    >
-        <group ref={group} dispose={null} rotation={[0, Math.PI, 0]} >
-            <group name="Scene">
-                <group name="RobotArmature">
-                <primitive object={nodes.Body} />
-                <primitive object={nodes.FootL} />
-                <primitive object={nodes.FootR} />
-                <skinnedMesh
-                    name="Mech"
-                    geometry={nodes.Mech.geometry}
-                    material={materials.Atlas}
-                    skeleton={nodes.Mech.skeleton}
-                    castShadow
-                >
-                    <CuboidCollider 
-                        ref={ characterColliderRef }
-                        args={ [ 1.2, 1.75, 1.2 ] }
-                        position={ [ 0, 1.75, 0 ] }
-                    />
-                </skinnedMesh>
-                </group>
-            </group>
-        </group>
-    </RigidBody>
+        if (translation.y < -25) {
+            characterRigidBody.current.setTranslation({ x: 0, y: 1, z: 0 })
+            characterRigidBody.current.setLinvel({ x: 0, y: 0, z: 0 })
+            characterRigidBody.current.setAngvel({ x: 0, y: 0, z: 0 })
+        }
+
+        // Camera Isometric
+        if (lockCameraIsometric) {
+            const cameraPosition = new Vector3(translation.x - isometricCameraPosition, translation.y + isometricCameraPosition, translation.z + isometricCameraPosition)
+            smoothedCameraPosition.lerp(cameraPosition, 0.1)
+            camera.position.copy(smoothedCameraPosition)
+        } else {
+            const cameraPosition = new Vector3(translation.x, translation.y + 12, translation.z + 20)
+            smoothedCameraPosition.lerp(cameraPosition, 0.1)
+            camera.position.copy(smoothedCameraPosition)
+
+            let matrixLooking = new Matrix4().lookAt(translation, newPosition,new Vector3(0,0,0));
+            let rotationQuaternion = new Quaternion().setFromRotationMatrix(matrixLooking);
+            rotationQuaternion.x = rotationQuaternion.z = 0
+            camera.setRotationFromQuaternion(rotationQuaternion)
+        }
+        smoothedCameraTarget.lerp(newPosition, 0.1)
+        camera.lookAt(smoothedCameraTarget)
+
+        // Transparent walls between camera and player
+        if (transparentWalls) {
+            for (let wall of temporaryTransparentWalls) {
+                wall.material.opacity = 1
+            }
+    
+            // Transparent walls
+            if (transparentWalls && transparentWalls.length > 0) {
+                let dir = camera.getWorldDirection( directionVector );
+                let pos = camera.getWorldPosition( positionVector);	
+                let raycaster = new Raycaster( pos, dir.normalize(), 0, raycastTransparentWallSize );	
+                let intersects = []
+                intersects = raycaster.intersectObjects( transparentWalls );
+                for (let instersectObject of intersects) {
+                    if (instersectObject.object.parent.name.includes('transparent')) {
+                        instersectObject.object.parent.traverse((children) => {
+                            if (children.isMesh) {
+                                children.material.transparent = true
+                                children.material.opacity = 0.25;
+                                temporaryTransparentWalls.push(children)
+                            }
+                        })
+                    } else {
+                        instersectObject.object.material.transparent = true
+                        instersectObject.object.material.opacity = 0.25;
+                        temporaryTransparentWalls.push(instersectObject.object)
+                    }
+                }
+            }
+        }
+    })
 }

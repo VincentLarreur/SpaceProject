@@ -1,10 +1,11 @@
 import './style.css'
 import ReactDOM from 'react-dom/client'
 import { Canvas } from '@react-three/fiber'
+import { Perf } from 'r3f-perf'
 import ExperienceHomePlanet from './HomePlanet/Experience.jsx'
-import ExperienceMechGame from './MechGame/Experience.jsx'
+import ExperienceLaboratory from './Laboratory/Experience.jsx'
+import ExperienceSpaceShip from './SpaceShip/Experience.jsx'
 import { KeyboardControls } from '@react-three/drei'
-import Interface from './Interface.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
@@ -17,17 +18,11 @@ root.render(
         { name: 'jump', keys: [ 'Space' ] },
         { name: 'sprint', keys: ['Shift'] },
     ] }>
-        <Canvas
-            shadows
-            camera={ {
-                fov: 45,
-                near: 0.1,
-                far: 300,
-            } }
-        >
+        <Canvas shadows camera={ { fov: 45 } }>
+            <Perf position={'top-left'}/>
             {/* <ExperienceHomePlanet /> */}
-            <ExperienceMechGame />
+            {/* <ExperienceLaboratory /> */}
+            <ExperienceSpaceShip />
         </Canvas>
-        <Interface />
     </KeyboardControls>
 )

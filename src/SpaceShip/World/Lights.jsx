@@ -1,18 +1,14 @@
 import { useRef } from 'react'
-import { useHelper } from '@react-three/drei'
 
 export default function Lights()
 {
     const light = useRef()
 
-    useHelper(light)
-
     return <>
         <directionalLight
             ref={ light }
-            castShadow
-            position={ [ 10, 20, 20 ] }
-            intensity={ 1.5 }
+            position={ [ 0, 20, 12 ] }
+            intensity={ 1 }
             shadow-normalBias={ 0.3 }
             shadow-mapSize={ [ 1024, 1024 ] }
             shadow-camera-near={ 1 }
