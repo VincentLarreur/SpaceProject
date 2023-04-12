@@ -1,12 +1,19 @@
 import { useRef } from "react";
-import { useControls as useLevaControls } from "leva";
-import { useThree } from "@react-three/fiber";
-import { useGLTF, useAnimations } from "@react-three/drei";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import { Vector3 } from "three";
+import { useThree, useFrame } from "@react-three/fiber";
+import { useGLTF, useAnimations, Text3D } from "@react-three/drei";
+import { CuboidCollider, RigidBody, vec3 } from "@react-three/rapier";
 import characterController from "../../utils/CharacterController.jsx";
-import Characters from "../../utils/characters.js";
+import useSpaceStore from "../../utils/SpaceStore.jsx";
 
-export default function Player({ character = Characters.FLAMINGO.mech }) {
+const computerCar = new Vector3(-62, -3.5, -52);
+const computerSpace = new Vector3(3.2, 8.4, -130);
+const computerMecha = new Vector3(42, 0.4, -74);
+const computerJump = new Vector3(66, 18, -48);
+
+export default function Player() {
+  const character = useSpaceStore((state) => state.character);
+
   const { scene } = useThree();
   let transparentWalls = [];
   scene.traverse((obj) => {
@@ -14,11 +21,38 @@ export default function Player({ character = Characters.FLAMINGO.mech }) {
       transparentWalls.push(obj);
     }
   });
+
   const group = useRef();
+  const interaction = useRef();
   const characterRigidBody = useRef();
   const characterColliderRef = useRef();
 
-  const { nodes, materials, animations } = useGLTF(character);
+  const distanceTrigger = 5;
+  let interactionVisible = false;
+
+  useFrame(() => {
+    const position = vec3(characterRigidBody.current.translation());
+    if (position.distanceTo(computerCar) < distanceTrigger) {
+      console.log("computer car");
+      interactionVisible = true
+    } else if (position.distanceTo(computerJump) < distanceTrigger) {
+      console.log("computer jump");
+      interactionVisible = true
+    } else if (position.distanceTo(computerMecha) < distanceTrigger) {
+      console.log("computer mecha");
+      interactionVisible = true
+    } else if (position.distanceTo(computerSpace) < distanceTrigger) {
+      console.log("computer space");
+      interactionVisible = true
+    } else {
+      interactionVisible = false
+    }
+    if (interaction.current.visible != interactionVisible) {
+      interaction.current.visible = interactionVisible;
+    }
+  });
+
+  const { nodes, materials, animations } = useGLTF(character.astronaut);
   const { actions } = useAnimations(animations, group);
 
   const {
@@ -40,28 +74,28 @@ export default function Player({ character = Characters.FLAMINGO.mech }) {
     isometricCameraPosition,
     lockCameraIsometric,
     raycastTransparentWallSize,
-  } = 
-  // useLevaControls("player-controller", 
-  {
-    applyImpulsesToDynamicBodies: true,
-    snapToGroundDistance: 0.1,
-    characterShapeOffset: 0.1,
-    autoStepMaxHeight: 1.5,
-    autoStepMinWidth: 0.5,
-    autoStepIncludeDynamicBodies: true,
-    accelerationTimeAirborne: 0.2,
-    accelerationTimeGrounded: 0.025,
-    speedWalk: 1,
-    speedRun: 2.5,
-    timeToJumpApex: 1.25,
-    maxJumpHeight: 8,
-    minJumpHeight: 1,
-    velocityXZSmoothing: 0.2,
-    velocityXZMin: 0.0001,
-    isometricCameraPosition: 20,
-    lockCameraIsometric: false,
-    raycastTransparentWallSize: 21,
-  }
+  } =
+    // useLevaControls("player-controller",
+    {
+      applyImpulsesToDynamicBodies: true,
+      snapToGroundDistance: 0.1,
+      characterShapeOffset: 0.1,
+      autoStepMaxHeight: 1.5,
+      autoStepMinWidth: 0.5,
+      autoStepIncludeDynamicBodies: true,
+      accelerationTimeAirborne: 0.2,
+      accelerationTimeGrounded: 0.025,
+      speedWalk: 1,
+      speedRun: 2.5,
+      timeToJumpApex: 1.25,
+      maxJumpHeight: 6,
+      minJumpHeight: 1,
+      velocityXZSmoothing: 0.2,
+      velocityXZMin: 0.0001,
+      isometricCameraPosition: 20,
+      lockCameraIsometric: false,
+      raycastTransparentWallSize: 21,
+    };
   // );
 
   characterController({
@@ -117,6 +151,15 @@ export default function Player({ character = Characters.FLAMINGO.mech }) {
               </skinnedMesh>
             </group>
           </group>
+          <Text3D 
+            ref={interaction}
+            font="./fonts/droid_sans.typeface.json"
+            position={[-0.2, 3, 0]}
+            visible={interactionVisible}
+          >
+            !
+            <meshNormalMaterial />
+          </Text3D>
         </group>
       </RigidBody>
     </>
