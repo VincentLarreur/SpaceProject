@@ -1,18 +1,38 @@
 import { useRef } from "react";
 import { Vector3 } from "three";
 import { useThree, useFrame } from "@react-three/fiber";
-import { useGLTF, useAnimations, Text3D } from "@react-three/drei";
+import { useGLTF, useAnimations, Text3D, useKeyboardControls } from "@react-three/drei";
 import { CuboidCollider, RigidBody, vec3 } from "@react-three/rapier";
 import characterController from "../../utils/CharacterController.jsx";
 import useSpaceStore from "../../utils/SpaceStore.jsx";
 
-const computerCar = new Vector3(-62, -3.5, -52);
-const computerSpace = new Vector3(3.2, 8.4, -130);
-const computerMecha = new Vector3(42, 0.4, -74);
-const computerJump = new Vector3(66, 18, -48);
+const COMPUTERS = [
+  {
+    position: new Vector3(-62, -3.5, -52),
+    redirect: '/Rover'
+  },
+  {
+    position: new Vector3(3.2, 8.4, -130),
+    redirect: '/Spacecraft'
+  },
+  {
+    position: new Vector3(42, 0.4, -74),
+    redirect: '/Mecha'
+  },
+  {
+    position: new Vector3(66, 18, -48),
+    redirect: '/Jump'
+  },
+  {
+    position: new Vector3(0, 20, -46),
+    redirect: '/Laboratory'
+  }
+]
 
 export default function Player() {
   const character = useSpaceStore((state) => state.character);
+
+  const [, getKeyboardControls] = useKeyboardControls()
 
   const { scene } = useThree();
   let transparentWalls = [];
@@ -27,26 +47,24 @@ export default function Player() {
   const characterRigidBody = useRef();
   const characterColliderRef = useRef();
 
-  const distanceTrigger = 5;
+  const distanceTrigger = 10;
   let interactionVisible = false;
 
   useFrame(() => {
     const position = vec3(characterRigidBody.current.translation());
-    if (position.distanceTo(computerCar) < distanceTrigger) {
-      console.log("computer car");
-      interactionVisible = true
-    } else if (position.distanceTo(computerJump) < distanceTrigger) {
-      console.log("computer jump");
-      interactionVisible = true
-    } else if (position.distanceTo(computerMecha) < distanceTrigger) {
-      console.log("computer mecha");
-      interactionVisible = true
-    } else if (position.distanceTo(computerSpace) < distanceTrigger) {
-      console.log("computer space");
-      interactionVisible = true
-    } else {
-      interactionVisible = false
-    }
+
+    const { interact } = getKeyboardControls()
+
+    interactionVisible = false
+    COMPUTERS.forEach((computer) => {
+      if (position.distanceTo(computer.position) < distanceTrigger) {
+        interactionVisible = true
+        if (interact) {
+          console.log('go to '+ computer.redirect);
+        }
+      }
+    });
+
     if (interaction.current.visible != interactionVisible) {
       interaction.current.visible = interactionVisible;
     }
@@ -158,7 +176,11 @@ export default function Player() {
             visible={interactionVisible}
           >
             !
-            <meshNormalMaterial />
+            <meshBasicMaterial 
+              color="#3B3B3B"
+              opacity={0.75}
+              transparent
+            />
           </Text3D>
         </group>
       </RigidBody>

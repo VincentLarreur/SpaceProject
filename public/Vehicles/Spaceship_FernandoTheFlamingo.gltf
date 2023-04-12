@@ -15,7 +15,7 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "Spaceship_FernandoTheFlamingo"
+            "name" : "Spacecraft"
         }
     ],
     "materials" : [

@@ -17,6 +17,7 @@ root.render(
         { name: 'rightward', keys: [ 'ArrowRight', 'KeyD' ] },
         { name: 'jump', keys: [ 'Space' ] },
         { name: 'sprint', keys: ['Shift'] },
+        { name: 'interact', keys: ['KeyE'] },
     ] }>
         <Canvas shadows camera={ { fov: 45 } }>
             <Perf position={'top-left'}/>

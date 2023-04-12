@@ -4,7 +4,11 @@ import {
   RigidBody,
   CuboidCollider,
   CylinderCollider,
+  BallCollider
 } from "@react-three/rapier";
+import Rover from './Vehicles/Rover.jsx'
+import Spacecraft from './Vehicles/Spacecraft.jsx'
+import Mecha from './Vehicles/Mecha.jsx'
 import useSpaceStore from '../../utils/SpaceStore.jsx'
 
 export default function Spaceship() {
@@ -111,13 +115,42 @@ export default function Spaceship() {
       />
       <CuboidCollider
         args={[0.3, 1.5, 0.3]} 
-        position={[11, 2, -19]}
+        position={[11, 1, -19]}
           rotation={[0, -Math.PI / 4, 0]}
       />
       <CuboidCollider 
         args={[0.3, 1.5, 0.3]}
         position={[17, 5.5, -12]}
       />
+
+      // car
+      <BallCollider 
+        args={[0.8]}
+        position={[-19, 0, -12 ]}
+      />
+      <CuboidCollider 
+        args={[1.2, 0.3, 1.2]}
+        rotation={[0, Math.PI / 4, 0]}
+        position={[-19, -0.5, -12 ]}
+      />
+      <CuboidCollider 
+        args={[0.2, 0.4, 0.2]}
+        position={[-19, 1.1, -12 ]}
+      />
+
+      // Spacecraft
+      <CuboidCollider 
+        args={[3, 1, 2]}
+        position={[0, 2.2, -37 ]}
+        rotation={[0, - Math.PI / 4, 0]}
+      />
+
+      // Mech
+      <CuboidCollider 
+        args={[0.6, 0.6, 0.6]}
+        position={[10, 0.8, -20 ]}
+      />
+
 
       <group dispose={null}>
         <group name="Floor_Global" position={[9, 0, -13]}>
@@ -776,7 +809,56 @@ export default function Spaceship() {
             material={materials["DarkAccent.007"].clone()}
           />
         </group>
+        <mesh
+          name="PressEToPlay"
+          geometry={nodes.PressEToPlay.geometry}
+          material={materials.Main}
+          position={[-15.95, 0.87, -12.96]}
+          rotation={[1.21, 0.34, -0.72]}
+          scale={0.11}
+        />
+        <mesh
+          name="PressEToPlay1"
+          geometry={nodes.PressEToPlay1.geometry}
+          material={materials.Main}
+          position={[1.17, 3.89, -32.96]}
+          rotation={[1.21, -0.34, 0.72]}
+          scale={0.11}
+        />
+        <mesh
+          name="PressEToPlay2"
+          geometry={nodes.PressEToPlay2.geometry}
+          material={materials.Main}
+          position={[10.96, 1.86, -18.94]}
+          rotation={[1.21, -0.34, 0.72]}
+          scale={0.11}
+        />
+        <mesh
+          name="PressEToPlay3"
+          geometry={nodes.PressEToPlay3.geometry}
+          material={materials.Main}
+          position={[16.95, 6.4, -12]}
+          rotation={[Math.PI / 2, -0.49, Math.PI / 2]}
+          scale={0.11}
+        />
       </group>
+
+      <Rover 
+        scale={0.5}
+        position={[-19, -1, -12 ]}
+        rotation={[0, Math.PI / 4, 0]}
+      />
+      
+      <Spacecraft 
+        scale={0.8}
+        position={[0, 2, -38 ]}
+        rotation={[0, - Math.PI / 4, 0]}
+      />
+
+      <Mecha 
+        scale={0.5}
+        position={[10, 0, -20 ]}
+      />
     </RigidBody>
   );
 }
