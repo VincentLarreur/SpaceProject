@@ -18,7 +18,7 @@ div#Spashscreen {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: url("./start.jpg") no-repeat;
+    background: url("/start.jpg") no-repeat;
     background-size: cover;
     background-position: bottom;
     display: grid;

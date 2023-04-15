@@ -64,7 +64,6 @@ export default function Player() {
         interactionVisible = true
         if (interact) {
           navigate(computer.redirect);
-          console.log('go to '+ computer.redirect);
         }
       }
     });

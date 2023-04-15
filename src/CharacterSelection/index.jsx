@@ -6,7 +6,6 @@ import useSpaceStore from "../utils/SpaceStore";
 export default function CharacterSelection() {
   const navigate = useNavigate();
 
-  const character = useSpaceStore((state) => state.character);
   const changeCharacter = useSpaceStore((state) => state.changeCharacter);
 
   function goToStart() {
