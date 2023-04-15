@@ -1,5 +1,6 @@
 export default {
     FROG: {
+        id: 1,
         name: "Finn The Frog",
         astronaut: "./Characters/Astronaut_FinnTheFrog.gltf",
         spacecraft: "./Vehicles/Spaceship_FinnTheFrog.gltf",
@@ -9,6 +10,7 @@ export default {
         spaceshipColor: "#4c7c26"
     },
     BEE: {
+        id: 2,
         name: "Barbara The Bee",
         astronaut: "./Characters/Astronaut_BarbaraTheBee.gltf",
         spacecraft: "./Vehicles/Spaceship_BarbaraTheBee.gltf",
@@ -18,6 +20,7 @@ export default {
         spaceshipColor: "#fbb33d"
     },
     FLAMINGO: {
+        id: 3,
         name: "Fernando The Flamingo",
         astronaut: "./Characters/Astronaut_FernandoTheFlamingo.gltf",
         spacecraft: "./Vehicles/Spaceship_FernandoTheFlamingo.gltf",
@@ -27,6 +30,7 @@ export default {
         spaceshipColor: "#e688be"
     },
     FOX: {
+        id: 4,
         name: "Rae The Panda",
         astronaut: "./Characters/Astronaut_RaeTheRedPanda.gltf",
         spacecraft: "./Vehicles/Spaceship_RaeTheRedPanda.gltf",

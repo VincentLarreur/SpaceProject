@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Vector3 } from "three";
 import { useThree, useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations, Text3D, useKeyboardControls } from "@react-three/drei";
@@ -32,6 +33,8 @@ const COMPUTERS = [
 export default function Player() {
   const character = useSpaceStore((state) => state.character);
 
+  const navigate = useNavigate();
+
   const [, getKeyboardControls] = useKeyboardControls()
 
   const { scene } = useThree();
@@ -60,6 +63,7 @@ export default function Player() {
       if (position.distanceTo(computer.position) < distanceTrigger) {
         interactionVisible = true
         if (interact) {
+          navigate(computer.redirect);
           console.log('go to '+ computer.redirect);
         }
       }

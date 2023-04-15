@@ -1,29 +1,30 @@
-import './style.css'
-import ReactDOM from 'react-dom/client'
-import { Canvas } from '@react-three/fiber'
-import { Perf } from 'r3f-perf'
-import ExperienceHomePlanet from './HomePlanet/Experience.jsx'
-import ExperienceLaboratory from './Laboratory/Experience.jsx'
-import ExperienceSpaceShip from './SpaceShip/Experience.jsx'
-import { KeyboardControls } from '@react-three/drei'
+import "./style.css";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Start from './Start'
+import Home from './Home'
+import Commands from "./Commands";
+import Credits from "./Credits";
+import Rover from "./Rover";
+import SpaceCraft from "./SpaceCraft";
+import Mecha from "./Mecha";
+import Jump from "./Jump";
+import CharacterSelection from "./CharacterSelection";
 
-const root = ReactDOM.createRoot(document.querySelector('#root'))
+const root = ReactDOM.createRoot(document.querySelector("#root"));
 
 root.render(
-    <KeyboardControls map={ [
-        { name: 'forward', keys: [ 'ArrowUp', 'KeyW' ] },
-        { name: 'backward', keys: [ 'ArrowDown', 'KeyS' ] },
-        { name: 'leftward', keys: [ 'ArrowLeft', 'KeyA' ] },
-        { name: 'rightward', keys: [ 'ArrowRight', 'KeyD' ] },
-        { name: 'jump', keys: [ 'Space' ] },
-        { name: 'sprint', keys: ['Shift'] },
-        { name: 'interact', keys: ['KeyE'] },
-    ] }>
-        <Canvas shadows camera={ { fov: 45 } }>
-            <Perf position={'top-left'}/>
-            {/* <ExperienceHomePlanet /> */}
-            {/* <ExperienceLaboratory /> */}
-            <ExperienceSpaceShip />
-        </Canvas>
-    </KeyboardControls>
-)
+  <Router>
+    <Routes>
+        <Route path="/" element={<Start />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/characterselection" element={<CharacterSelection />} />
+        <Route path="/commands" element={<Commands />} />
+        <Route path="/credits" element={<Credits />} />
+        <Route path="/rover" element={<Rover />} />
+        <Route path="/mecha" element={<Mecha />} />
+        <Route path="/spacecraft" element={<SpaceCraft />} />
+        <Route path="/jump" element={<Jump />} />
+    </Routes>
+  </Router>
+);
