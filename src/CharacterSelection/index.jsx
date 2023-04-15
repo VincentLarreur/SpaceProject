@@ -58,7 +58,7 @@ export default function CharacterSelection() {
               {characters.FROG.name}
             </option>
             <option value={characters.FOX.id} key={characters.FOX.id}>
-              {characters.BEE.name}
+              {characters.FOX.name}
             </option>
           </select>
         </label>
