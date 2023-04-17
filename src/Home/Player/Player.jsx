@@ -25,7 +25,7 @@ const COMPUTERS = [
     redirect: '/Jump'
   },
   {
-    position: new Vector3(0, 20, -46),
+    position: new Vector3(0, 5, -46),
     redirect: '/Laboratory'
   }
 ]
@@ -96,7 +96,6 @@ export default function Player() {
     lockCameraIsometric,
     raycastTransparentWallSize,
   } =
-    // useLevaControls("player-controller",
     {
       applyImpulsesToDynamicBodies: true,
       snapToGroundDistance: 0.1,
@@ -117,7 +116,6 @@ export default function Player() {
       lockCameraIsometric: false,
       raycastTransparentWallSize: 21,
     };
-  // );
 
   characterController({
     characterRigidBody,

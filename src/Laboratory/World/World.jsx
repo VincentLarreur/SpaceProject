@@ -2,12 +2,14 @@ import { Color, Vector3 } from 'three'
 import { useGLTF } from "@react-three/drei";
 import { Stars } from '@react-three/drei'
 import { RigidBody } from '@react-three/rapier'
-import Characters from "../../utils/characters.js"
+import useSpaceStore from '../../utils/SpaceStore.jsx';
 
-export default function World({characterChosen = Characters.FOX})
+export default function World()
 {
-    const { nodes, materials } = useGLTF("./Envirronment/testWorld.gltf");
-    materials["Material.001"].color = new Color(characterChosen.color)
+    const characterChosen = useSpaceStore((state) => state.character)
+
+    const { nodes, materials } = useGLTF("./Envirronment/Laboratory.gltf");
+    materials["Material.001"].color = new Color(characterChosen.laboratoryColor)
 
     const position = new Vector3(12, -10, 46)
 
@@ -112,3 +114,5 @@ export default function World({characterChosen = Characters.FOX})
         </RigidBody>
     </>
 }
+
+useGLTF.preload("./Envirronment/Laboratory.gltf");

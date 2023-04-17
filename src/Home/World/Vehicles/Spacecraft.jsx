@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import useSpaceStore from "../../../utils/SpaceStore.jsx";
 import { useFrame } from "@react-three/fiber";
 
-export default function SpqceCraft(props) {
+export default function SpaceCraft(props) {
   const character = useSpaceStore((state) => state.character);
 
   const { nodes, materials } = useGLTF(character.spacecraft);

@@ -1,11 +1,11 @@
 import { Canvas } from '@react-three/fiber'
-import ExperienceSpaceShip from './Experience.jsx'
 import { KeyboardControls } from '@react-three/drei'
+import ExperienceLaboratory from './Experience.jsx'
 import PauseMenu from '../utils/PauseMenu.jsx'
 
-export default function Home()
+export default function Laboratory()
 {
-    document.title = "Space Project - Home";
+    document.title = "Space Project - Laboratory";
 
     return <KeyboardControls map={ [
         { name: 'forward', keys: [ 'ArrowUp', 'KeyW' ] },
@@ -18,8 +18,8 @@ export default function Home()
         { name: 'pause', keys: ['Escape'] },
     ] }>
         <PauseMenu />
-        <Canvas camera={ { fov: 45 } }>
-            <ExperienceSpaceShip />
+        <Canvas shadows camera={ { fov: 45 } }>
+            <ExperienceLaboratory />
         </Canvas>
     </KeyboardControls>
 }

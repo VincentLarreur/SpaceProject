@@ -9,14 +9,6 @@ export default function Lights()
             ref={ light }
             position={ [ 0, 20, 12 ] }
             intensity={ 1 }
-            shadow-normalBias={ 0.3 }
-            shadow-mapSize={ [ 1024, 1024 ] }
-            shadow-camera-near={ 1 }
-            shadow-camera-far={ 100 }
-            shadow-camera-top={ 100 }
-            shadow-camera-right={ 100 }
-            shadow-camera-bottom={ - 100 }
-            shadow-camera-left={ - 100 }
         />
         <ambientLight intensity={ 0.5 } />
     </>

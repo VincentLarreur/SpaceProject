@@ -1,34 +1,45 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Start()
-{        
-    const navigate = useNavigate();
+export default function Start() {
+  document.title = "Space Project";
 
-    function goToStart() {
-        navigate("/");
-    }
+  const navigate = useNavigate();
 
-    function goToCharacterSelection() {
-        navigate("/characterselection");
-    }
+  function goToStart() {
+    navigate("/");
+  }
 
-    function goToCommands() {
-        navigate("/commands");
-    }
+  function goToCharacterSelection() {
+    navigate("/characterselection");
+  }
 
-    function goToCredits() {
-        navigate("/credits");
-    }
+  function goToCommands() {
+    navigate("/commands");
+  }
 
-    return (
-      <div id="Spashscreen">
-        <h1 onClick={goToStart}>Space Project</h1>
-        <div>
-            <button onClick={goToCharacterSelection}>Start Game</button>
-            <button onClick={goToCommands}>Commands</button>
-            <button onClick={goToCredits}>Credits</button>
-        </div>
-        <span>© Space Project by <a href="https://www.linkedin.com/in/vincent-larreur/">Vincent Larreur</a> | Using <a href="https://quaternius.com/">Quaternius</a> Assets</span>
+  function goToCredits() {
+    navigate("/credits");
+  }
+
+  return (
+    <div id="Spashscreen">
+      <h1 onClick={goToStart}>Space Project</h1>
+      <div>
+        <button onClick={goToCharacterSelection}>Start Game</button>
+        <button onClick={goToCommands}>Commands</button>
+        <button onClick={goToCredits}>Credits</button>
       </div>
-    );
+      <span>
+        © Space Project by{" "}
+        <a href="https://www.linkedin.com/in/vincent-larreur/" target="_blank">
+          Vincent Larreur
+        </a>{" "}
+        | Using{" "}
+        <a href="https://quaternius.com/" target="_blank">
+          Quaternius
+        </a>{" "}
+        Assets
+      </span>
+    </div>
+  );
 }

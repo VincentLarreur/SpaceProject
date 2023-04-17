@@ -4,6 +4,8 @@ import characters from "../utils/characters";
 import useSpaceStore from "../utils/SpaceStore";
 
 export default function CharacterSelection() {
+  document.title = "Space Project - Character Selection";
+
   const navigate = useNavigate();
 
   const changeCharacter = useSpaceStore((state) => state.changeCharacter);
@@ -45,7 +47,7 @@ export default function CharacterSelection() {
       <h1 onClick={goToStart}>Space Project</h1>
       <form onSubmit={goToHome}>
         <label>
-          Pick your character:
+          Pick your character
           <select value={selectedObject ? selectedObject.id : ''} onChange={handleChange}>
             <option value="">Select an option</option>
             <option value={characters.BEE.id} key={characters.BEE.id}>
@@ -66,10 +68,10 @@ export default function CharacterSelection() {
       </form>
       <span>
         © Space Project by{" "}
-        <a href="https://www.linkedin.com/in/vincent-larreur/">
+        <a href="https://www.linkedin.com/in/vincent-larreur/"target="_blank">
           Vincent Larreur
         </a>{" "}
-        | Using <a href="https://quaternius.com/">Quaternius</a> Assets
+        | Using <a href="https://quaternius.com/" target="_blank">Quaternius</a> Assets
       </span>
     </div>
   );

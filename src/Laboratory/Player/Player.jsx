@@ -1,13 +1,14 @@
 import { useRef } from 'react'
-import { useControls as useLevaControls } from 'leva'
 import { useThree } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import characterController from '../../utils/CharacterController.jsx'
-import Characters from "../../utils/characters.js"
+import useSpaceStore from '../../utils/SpaceStore.jsx'
 
-export default function Player({character = Characters.FLAMINGO.mech})
+export default function Player()
 {
+    const characterChosen = useSpaceStore((state) => state.character)
+
     const { scene } = useThree()
     let transparentWalls = []
     scene.traverse((obj) => {
@@ -19,7 +20,7 @@ export default function Player({character = Characters.FLAMINGO.mech})
     const characterRigidBody = useRef()
     const characterColliderRef = useRef()
 
-    const { nodes, materials, animations } = useGLTF(character)
+    const { nodes, materials, animations } = useGLTF(characterChosen.mech)
     const { actions } = useAnimations(animations, group)
 
     const {
@@ -40,7 +41,7 @@ export default function Player({character = Characters.FLAMINGO.mech})
         velocityXZMin,
         isometricCameraPosition,
         lockCameraIsometric
-    } = useLevaControls('player-controller', {
+    } =  {
         applyImpulsesToDynamicBodies: true,
         snapToGroundDistance: 0.1,
         characterShapeOffset: 0.1,
@@ -58,7 +59,7 @@ export default function Player({character = Characters.FLAMINGO.mech})
         velocityXZMin: 0.0001,
         isometricCameraPosition: 20,
         lockCameraIsometric: true
-    })
+    }
 
     characterController({
         characterRigidBody,

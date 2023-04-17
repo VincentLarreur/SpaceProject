@@ -8,7 +8,7 @@ export default function Mecha(props) {
   const { nodes, materials, animations } = useGLTF(character.mech);
   const { actions } = useAnimations(animations, group);
 
-  useEffect((state) => {
+  useEffect(() => {
     actions["Idle"].play()
   });
 

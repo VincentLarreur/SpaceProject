@@ -10,6 +10,7 @@ import SpaceCraft from "./SpaceCraft";
 import Mecha from "./Mecha";
 import Jump from "./Jump";
 import CharacterSelection from "./CharacterSelection";
+import Laboratory from "./Laboratory";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
@@ -25,6 +26,7 @@ root.render(
         <Route path="/mecha" element={<Mecha />} />
         <Route path="/spacecraft" element={<SpaceCraft />} />
         <Route path="/jump" element={<Jump />} />
+        <Route path="/laboratory" element={<Laboratory />} />
     </Routes>
   </Router>
 );

@@ -2,8 +2,7 @@
 
 html,
 body,
-#root
-{
+#root {
     position: fixed;
     top: 0;
     left: 0;
@@ -27,25 +26,45 @@ div#Spashscreen {
     justify-items: center;
 }
 
-div#Spashscreen > * {
+div#Spashscreen>*,
+div#pauseMenu>* {
     color: white;
     background-color: rgba(0, 0, 0, .4);
     padding: 10px 20px;
     border-radius: 20px;
 }
 
-div#Spashscreen h1 {
+div#Spashscreen h1,
+div#pauseMenu h1 {
     font-family: 'Orbitron', sans-serif;
     cursor: pointer;
     font-size: 5em;
 }
 
-div#Spashscreen div {
+div#Spashscreen div,
+div#pauseMenu div {
     display: grid;
     align-items: center;
 }
 
-div#Spashscreen button, select, input {
+div#Spashscreen form,
+div#pauseMenu form {
+    display: grid;
+}
+
+div#Spashscreen form label,
+div#pauseMenu form label {
+    text-align: center;
+}
+
+div#Spashscreen form input,
+div#pauseMenu form input {
+    justify-self: center;
+}
+
+button,
+select,
+input {
     display: block;
     color: white;
     cursor: pointer;
@@ -57,7 +76,8 @@ div#Spashscreen button, select, input {
     border-radius: 20px;
 }
 
-div#Spashscreen span {
+div#Spashscreen span,
+div#pauseMenu span {
     position: fixed;
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
@@ -71,20 +91,57 @@ div#Spashscreen span {
     border-radius: 20px;
 }
 
-div#Spashscreen a {
+div#Spashscreen a,
+div#pauseMenu a {
     color: rgba(254, 254, 254, .5);
     text-decoration: none;
 }
 
-div#Spashscreen a:hover {
+div#Spashscreen a:hover,
+div#pauseMenu a:hover {
     color: #252731;
 }
 
-div#Spashscreen ul {
-    padding: 0;
+div#Spashscreen td {
+    padding-top: 15px;
 }
 
-div#Spashscreen ul li{
-    list-style-type: none;
-    padding: 10px;
+canvas {
+    cursor: none;
+}
+
+/**
+ * Interface
+ */
+div#pauseMenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 25% 1fr 50px;
+    align-items: center;
+    justify-items: center;
+    background-color: rgba(25, 25, 25, .3);
+}
+
+div#credits {
+    background-color: rgba(0, 0, 0, .6);
+    max-width: 50%;
+    font-size: 0.8rem;
+}
+
+kbd {
+    border: 2px solid #252731;
+    box-shadow: 2px 2px #252731;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: .05em;
+    padding: 3px 5px;
+    white-space: nowrap;
 }

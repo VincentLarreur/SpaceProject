@@ -1,29 +1,76 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Commands()
-{        
-    const navigate = useNavigate();
+export default function Commands() {
+  document.title = "Space Project - Commands";
 
-    function goToStart() {
-        navigate("/");
-    }
+  const navigate = useNavigate();
 
-    return (
-      <div id="Spashscreen">
-        <h1 onClick={goToStart}>Space Project</h1>
-        <div>
-            <ul>
-                <li>Forward : W or ↑</li>
-                <li>Backward : S or ↓</li>
-                <li>Left : A or ←</li>
-                <li>Right : D or →</li>
-                <li>Jump : Space</li>
-                <li>Sprint : Shift</li>
-                <li>Interact : E</li>
+  function goToStart() {
+    navigate("/");
+  }
 
-            </ul>
-        </div>
-        <span>© Space Project by <a href="https://www.linkedin.com/in/vincent-larreur/">Vincent Larreur</a> | Using <a href="https://quaternius.com/">Quaternius</a> Assets</span>
+  return (
+    <div id="Spashscreen">
+      <h1 onClick={goToStart}>Space Project</h1>
+      <div>
+        <table>
+          <tr>
+            <td>Forward</td>
+            <td>
+              <kbd>W</kbd> <kbd>↑</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Backward</td>
+            <td>
+              <kbd>S</kbd> <kbd>↓</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Left</td>
+            <td>
+              <kbd>A</kbd> <kbd>←</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Right</td>
+            <td>
+              <kbd>D</kbd> <kbd>→</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Jump</td>
+            <td>
+              <kbd>Space</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Sprint</td>
+            <td>
+              <kbd>Shift</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Interact</td>
+            <td>
+              <kbd>E</kbd>
+            </td>
+          </tr>
+          <tr>
+            <td>Pause</td>
+            <td>
+              <kbd>Escape</kbd>
+            </td>
+          </tr>
+        </table>
       </div>
-    );
+      <span>
+        © Space Project by{" "}
+        <a href="https://www.linkedin.com/in/vincent-larreur/" target="_blank">
+          Vincent Larreur
+        </a>{" "}
+        | Using <a href="https://quaternius.com/" target="_blank">Quaternius</a> Assets
+      </span>
+    </div>
+  );
 }
